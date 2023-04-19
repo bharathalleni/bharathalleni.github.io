@@ -134,7 +134,7 @@
         "schema-name": function () { return 'schema_name' },
         "table-name": function () { return 'table_name' }
       },
-      "rule-action": "include"
+      "rule-action": function () { return 'rule_action' }
     }
 
     var template = templateMaker(obj);
@@ -142,7 +142,7 @@
     const downloadTemplateButton = document.getElementById("download-template-button");
 
     downloadTemplateButton.addEventListener("click", () => {
-      const csvTemplate = "schema_name,table_name\nexample-schema,example-table-name\nexample-schema,example-table-name-1";
+      const csvTemplate = "schema_name,table_name,rule_action\nexample-schema,example-table-name,include\nexample-schema,example-table-name-1,exclude";
       const blob = new Blob([csvTemplate], { type: "text/csv;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
@@ -180,6 +180,7 @@
           var data_inner = {
               schema_name: row.schema_name,
               table_name: row.table_name,
+              rule_action: row.rule_action || "include",
               rule_id: i
           }
           var rendered = template(data_inner);
