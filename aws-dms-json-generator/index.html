@@ -78,7 +78,7 @@
   button[type="submit"]:hover {
     background-color: #3e8e41;
   }
-  .copy-button { float:right }
+  .download-button { float:right }
   
   .action_btn {
   width: 200px;
@@ -104,8 +104,8 @@
   <div class="container">
     <div class="form-group">
       <label for="json-output">Generated JSON: 
-      <span class="copy-button">
-          <button type="button" id="copy-button">Copy to Clipboard</button>    
+      <span class="download-button">
+          <button type="button" id="download-button">Download JSON</button>    
       </span>
       </label>
       <textarea id="json-output" name="json-output" rows="70" cols="60"></textarea>
@@ -193,11 +193,28 @@
         const jsonOutput = document.getElementById("json-output");
         jsonOutput.value = JSON.stringify(rules_outer, null, 2);
 
-        const copyButton = document.getElementById("copy-button");
-        copyButton.addEventListener("click", () => {
-        jsonOutput.select();
-        document.execCommand("copy");
-      });
+        const downloadButton = document.getElementById("download-button");
+        downloadButton.addEventListener("click", () => {
+          const jsonOutput = document.getElementById("json-output");
+          const jsonData = jsonOutput.value;
+
+          // Create a Blob from the JSON data
+          const blob = new Blob([jsonData], { type: "application/json" });
+
+          // Create a temporary anchor element
+          const downloadLink = document.createElement("a");
+          downloadLink.href = URL.createObjectURL(blob);
+          downloadLink.download = "table-mappings.json"; // Specify the filename for the downloaded file
+
+          // Append the anchor element to the document
+          document.body.appendChild(downloadLink);
+
+          // Trigger the click event on the anchor element to initiate the download
+          downloadLink.click();
+
+          // Clean up the temporary anchor element
+          document.body.removeChild(downloadLink);
+        });
       };
 
       reader.readAsText(file);
